@@ -19,5 +19,8 @@ public class ExemploMatriz {
         Matriz transp = orig.getTransposta();
         System.out.println("Matriz original: " + orig);
         System.out.println("Matriz transposta: " + transp);
+        System.out.println("Teste soma: " + transp.soma(orig));
+        System.out.println("Teste produto: " + transp.prod(orig));
+      
     }
 }
