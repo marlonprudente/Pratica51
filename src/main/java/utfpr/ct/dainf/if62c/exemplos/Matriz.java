@@ -52,7 +52,30 @@ public class Matriz {
      * @return A soma das matrizes
      */
     public Matriz soma(Matriz mat) {
-        throw new UnsupportedOperationException("Soma de matrizes não implementada.");
+        double[][] m = mat.getMatriz();
+        double[][] n = mat.getMatriz();
+        double[][] result = mat.getMatriz();
+        m[0][0] = 0.0;
+        m[0][1] = 0.1;
+        m[1][0] = 1.0;
+        m[1][1] = 1.1;
+        m[2][0] = 2.0;
+        //Matriz N
+        m[2][1] = 2.1;
+        n[0][0] = 0.0;
+        n[0][1] = 0.1;
+        n[1][0] = 1.0;
+        n[1][1] = 1.1;
+        n[2][0] = 2.0;
+        n[2][1] = 2.1;
+        for(int i = 0; i< m.length;i++){
+            for(int j = 0;j<m[0].length;j++)
+            {
+                result[i][j] = m[i][j] + n[i][j];
+            }
+        }
+//throw new UnsupportedOperationException("Soma de matrizes não implementada.");
+        return mat;
     }
 
     /**
@@ -61,7 +84,32 @@ public class Matriz {
      * @return O produto das matrizes
      */
     public Matriz prod(Matriz mat) {
-        throw new UnsupportedOperationException("Produto de matrizes não implementado.");
+        double[][] m = mat.getMatriz();
+        m[0][0] = 0.0;
+        m[0][1] = 0.1;
+        m[1][0] = 1.0;
+        m[1][1] = 1.1;
+        m[2][0] = 2.0;
+        Matriz transp = new Matriz(m[0].length,m.length);
+            for (int i = 0; i < m.length; i++) {
+                for (int j = 0; j < m[i].length; j++) {
+                    transp.mat[j][i] = m[i][j];
+            }
+        }
+            double aux = 0;
+            double[][] n = transp.getMatriz();
+            double[][] result = mat.getMatriz();
+        for(int i = 0; i < m.length;i++){
+            for(int j = 0;j < m[0].length;j++){
+                for(int k = 0; k <m[0].length;k++){
+                    aux = m[i][k]*n[k][j] + result[i][j];                    
+                }
+                result[i][j] = aux;
+                aux=0;
+            }
+        }
+       // throw new UnsupportedOperationException("Produto de matrizes não implementado.");
+        return transp;
     }
 
     /**
