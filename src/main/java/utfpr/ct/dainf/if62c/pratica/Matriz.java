@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package utfpr.ct.dainf.if62c.exemplos;
+package utfpr.ct.dainf.if62c.pratica;
 
 /**
  * Representa uma matriz de valores double.
@@ -20,7 +20,10 @@ public class Matriz {
      * @param m O número de linhas da matriz.
      * @param n O número de colunas da matriz.
      */
-    public Matriz(int m, int n) {
+    public Matriz (int m, int n) throws MatrizInvalidaException {
+        if(m <=0 || n <=0){
+            throw new MatrizInvalidaException(m,n);
+        }            
         mat = new double[m][n];
     }
     
@@ -36,7 +39,7 @@ public class Matriz {
      * Retorna a matriz transposta.
      * @return A matriz transposta.
      */
-    public Matriz getTransposta() {
+    public Matriz getTransposta() throws MatrizInvalidaException {
         Matriz t = new Matriz(mat[0].length, mat.length);
         for (int i = 0; i < mat.length; i++) {
             for (int j = 0; j < mat[i].length; j++) {
@@ -51,65 +54,52 @@ public class Matriz {
      * @param mat A matriz a ser somada
      * @return A soma das matrizes
      */
-    public Matriz soma(Matriz mat) {
-        double[][] m = mat.getMatriz();
-        double[][] n = mat.getMatriz();
-        double[][] result = mat.getMatriz();
-        m[0][0] = 0.0;
-        m[0][1] = 0.1;
-        m[1][0] = 1.0;
-        m[1][1] = 1.1;
-        m[2][0] = 2.0;
-        //Matriz N
-        m[2][1] = 2.1;
-        n[0][0] = 0.0;
-        n[0][1] = 0.1;
-        n[1][0] = 1.0;
-        n[1][1] = 1.1;
-        n[2][0] = 2.0;
-        n[2][1] = 2.1;
-        for(int i = 0; i< m.length;i++){
-            for(int j = 0;j<m[0].length;j++)
-            {
-                result[i][j] = m[i][j] + n[i][j];
-            }
+    public Matriz soma(Matriz m) throws SomaMatrizesIncompativeisException{
+        if (mat.length != m.getMatriz().length || mat[0].length != m.getMatriz()[0].length) {
+            throw new SomaMatrizesIncompativeisException(this, m);
         }
-//throw new UnsupportedOperationException("Soma de matrizes não implementada.");
-        return mat;
+        Matriz ms = null;
+        try { // construtor de Matriz lança exceção verificada
+            ms = new Matriz(mat.length, mat[0].length);
+            for (int i = 0; i < this.mat.length; i++) {
+                for (int j = 0; j < mat[i].length; j++) {
+                    ms.mat[i][j] = mat[i][j] + m.mat[i][j];
+                }
+            }
+            return ms;
+        } catch (MatrizInvalidaException e) {
+            // ignoramos esta exceção pois o construtor da classe garante
+            // que uma matriz de dimensões inválidas nunca será criada
+        }
+        return ms;
     }
+ 
 
     /**
      * Retorna o produto desta matriz com a matriz recebida como argumento.
      * @param mat A matriz a ser multiplicada
      * @return O produto das matrizes
      */
-    public Matriz prod(Matriz mat) {
-        double[][] m = mat.getMatriz();
-        m[0][0] = 0.0;
-        m[0][1] = 0.1;
-        m[1][0] = 1.0;
-        m[1][1] = 1.1;
-        m[2][0] = 2.0;
-        Matriz transp = new Matriz(m[0].length,m.length);
-            for (int i = 0; i < m.length; i++) {
-                for (int j = 0; j < m[i].length; j++) {
-                    transp.mat[j][i] = m[i][j];
-            }
+    public Matriz prod(Matriz m) {
+        if (mat[0].length != m.getMatriz().length) {
+            throw new ProdMatrizesIncompativeisException(this, m);
         }
-            double aux = 0;
-            double[][] n = transp.getMatriz();
-            double[][] result = mat.getMatriz();
-        for(int i = 0; i < m.length;i++){
-            for(int j = 0;j < m[0].length;j++){
-                for(int k = 0; k <m[0].length;k++){
-                    aux = m[i][k]*n[k][j] + result[i][j];                    
+        
+        Matriz mp = null;
+        try { // construtor de Matriz lança exceção verificada
+            mp = new Matriz(mat.length, m.mat[0].length);
+            for (int i = 0; i < this.mat.length; i++) {
+                for (int j = 0; j < m.mat[0].length; j++) {
+                    for (int k = 0; k < m.mat.length; k++) {
+                        mp.mat[i][j] += mat[i][k] * m.mat[k][j];
+                    }
                 }
-                result[i][j] = aux;
-                aux=0;
             }
+        } catch (MatrizInvalidaException e) {
+            // ignoramos esta exceção pois o construtor da classe garante
+            // que uma matriz de dimensões inválidas nunca será criada
         }
-       // throw new UnsupportedOperationException("Produto de matrizes não implementado.");
-        return transp;
+        return mp;
     }
 
     /**
